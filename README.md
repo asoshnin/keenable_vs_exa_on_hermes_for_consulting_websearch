@@ -10,10 +10,10 @@ seeing both candidates and then again with them swapped — so a position artefa
 masquerade as a finding.
 
 The harness produced the accompanying report — `paper/REPORT.md` and `paper/report.pdf` —
-comparing **Keenable** against **Exa** on 30 captured queries across six categories, of which
-10 pairs were scored by two independent judges in both presentation orders.
+comparing **Keenable.ai** against **Exa**: 30 queries captured across six categories, of which
+**10 pairs** were scored blind by two independent scoring methods in both presentation orders.
 
-[![One-slide summary: Keenable.ai leads Exa on analytical depth (+0.31 of 2) and source authority; freshness is a statistical tie. The consulting lead is consistent in direction but its confidence interval includes zero; deep research is contested. Ten blind-scored pairs drawn from 30 captured queries.](assets/slide.png?v=5efb1794)](paper/report.pdf)
+[![One-slide summary: Keenable.ai leads Exa on analytical depth (+0.31 of 2) and source authority; freshness shows no clear difference. The consulting lead is consistent in direction but its confidence interval includes zero; deep research is contested. Ten blind-scored pairs drawn from 30 captured queries.](assets/slide.png?v=5efb1794)](paper/report.pdf)
 
 *One-slide summary — click for the [full report](paper/report.pdf), or open the
 [full-size PNG](assets/slide.png) (3200×1800).*
@@ -31,9 +31,10 @@ Keenable.ai wins, but not for the reason usually claimed. Across **10 blind-scor
 30 captured queries) its advantage concentrates in **analytical depth** (+0.31 of 2, the largest
 of six criteria) and **source authority** (+0.23). On **recency and freshness** — the criterion
 everyone expects a challenger to compete on — it is ahead by only **+0.042**: below the
-pre-declared 0.10 clear-win floor, and level with relevance precision. **A statistical tie, not a
-deficit** — it is never behind in aggregate, though it does trail on one query (SaaS comps) and
-is level on another.
+pre-declared 0.10 clear-win floor, and level with relevance precision. That is **no clear
+difference, and specifically not a deficit** — it never trails in aggregate, though it does lose
+one query (SaaS comps) and draw another. No test was run at the criterion level; the "no clear
+difference" call is the pre-declared floor, not a significance test.
 
 The lead is consistent in **direction** on consulting-style research — clear wins on **3 of 5**
 pairs on the scorecard and **5 of 5** on the frontier judge — but the scorecard's 95% interval,
@@ -49,7 +50,7 @@ Most "search engine X is better" claims fail on one of four things. Each is addr
 | Failure | What this harness does |
 |---|---|
 | **Unverifiable inputs.** The comparison silently ran against a fallback engine. | Every capture records `served_by`, `keyless` and the HTTP status. A failed call raises; it never becomes another engine's data. |
-| **One judge = one narrative.** | Three layers: a single-LLM body, a System-1 MCDA model, and a frontier LLM. Their disagreements are reported as findings. |
+| **One judge = one narrative.** | More than one scoring method — an MCDA decision plane and a frontier LLM, on top of a single-judge body pass. Their disagreements are reported as findings. |
 | **Position bias.** The judge prefers whichever candidate it reads second. | Every pair is judged in **both** presentation orders. Winner flips and score drift are reported per query. |
 | **Category aggregate hides a loss.** "Both 4.2 — tie." | Queries are scored individually and only then grouped. The harness flags `mixed` winners inside a category. |
 
@@ -175,8 +176,9 @@ led, the declared winner in each order, whether it was stable, and the score dri
 
 ## Known limitations
 
-- **Judge families correlate.** Three LLM-based judges sharing a rubric are not three
-  independent instruments. Agreement is reported as agreement, not as validation.
+- **Judge families correlate.** The report's layers share a rubric and are not fully
+  independent instruments: the body judge read raw results, the two appendix judges read the
+  same summarised evidence cards. Agreement is reported as agreement, not as validation.
 - **The evidence cards are summaries.** They carry every returned domain, title and a
   truncated snippet plus a machine-counted facts block. A judge that scores "depth" from
   a card is scoring the card's fidelity as well as the engine's.
