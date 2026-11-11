@@ -4,32 +4,41 @@ A task-specific, **blind, multi-judge** harness for comparing two web-search bac
 research work that consultancies actually do — market sizing, M&A/valuation, finance
 benchmarks, technical due diligence, regulatory tracking, and multi-hop deep research.
 
-It does not use a public leaderboard. It defines its own query set, its own rubric, and
-then forces three independent judges to score the same anonymised evidence — twice each,
-with the candidates swapped — so that a position artefact cannot masquerade as a finding.
+It does not use a public leaderboard. It defines its own query set, its own rubric, and then
+scores the same anonymised evidence with **more than one independent scoring method**, each
+seeing both candidates and then again with them swapped — so a position artefact cannot
+masquerade as a finding.
 
 The harness produced the accompanying report — `paper/REPORT.md` and `paper/report.pdf` —
 comparing **Keenable** against **Exa** on 30 captured queries across six categories, of which
 10 pairs were scored by two independent judges in both presentation orders.
 
-[![Benchmark summary: Keenable wins on analytical depth; freshness is a tie](assets/slide.png)](paper/report.pdf)
+[![One-slide summary: Keenable.ai leads Exa on analytical depth (+0.31 of 2) and source authority; freshness is a statistical tie. The consulting lead is consistent in direction but its confidence interval includes zero; deep research is contested. Ten blind-scored pairs drawn from 30 captured queries.](assets/slide.png?v=5efb1794)](paper/report.pdf)
 
-*One-slide summary. Click for the full report (`paper/report.pdf`). Re-render it with `make slide`.*
+*One-slide summary — click for the [full report](paper/report.pdf), or open the
+[full-size PNG](assets/slide.png) (3200×1800).*
+
+> **Regenerating the slide:** `make slide` re-renders `assets/slide.png` from `assets/slide.html`
+> and **automatically re-stamps the `?v=` hash in the image URL above**. That stamp matters:
+> GitHub serves README images through its Camo CDN, which caches by URL, so without it an
+> unchanged filename keeps showing the previous render no matter how often you refresh.
 
 ---
 
 ## The finding, in one paragraph
 
-Keenable wins, but not for the reason usually claimed. Across ten blind-scored pairs its
-advantage concentrates in **analytical depth** (+0.31 on a 0–2 scale, the largest of six
-criteria) and **source authority** (+0.23). On **recency and freshness** — the criterion one
-would expect a challenger to compete on — Keenable is nominally ahead by +0.04, fifth of six and
-well inside the noise: **a tie, not a deficit**. It even trails on one query (SaaS comps) and is
-level on another.
-The lead is consistent on consulting-style research (clear wins on 3 of 5 pairs under a decision
-plane, 5 of 5 under a frontier judge) and **contested on deep research** (one clear win, one
-directional loss, three gaps below the pre-declared 0.10 clear-win floor). Read the margin as
-indicative, not established: the consulting confidence interval spans zero.
+Keenable.ai wins, but not for the reason usually claimed. Across **10 blind-scored pairs** (from
+30 captured queries) its advantage concentrates in **analytical depth** (+0.31 of 2, the largest
+of six criteria) and **source authority** (+0.23). On **recency and freshness** — the criterion
+everyone expects a challenger to compete on — it is ahead by only **+0.042**: below the
+pre-declared 0.10 clear-win floor, and level with relevance precision. **A statistical tie, not a
+deficit** — it is never behind in aggregate, though it does trail on one query (SaaS comps) and
+is level on another.
+
+The lead is consistent in **direction** on consulting-style research — clear wins on **3 of 5**
+pairs on the scorecard and **5 of 5** on the frontier judge — but the scorecard's 95% interval,
+**−0.04 to +0.43, includes zero**, so the *size* of the consulting lead is not established. Deep
+research is **contested**: one clear win, one pair leaning Exa, three below the floor.
 
 ---
 
@@ -64,12 +73,13 @@ requirement, so results can be reproduced and audited without installing Hermes.
 ## Quick start
 
 ```bash
-git clone <this repo> && cd search-benchmark
+git clone <this repo> && cd keenable_vs_exa_on_hermes_for_consulting_websearch
 cp .env.example .env          # add your keys — .env is gitignored
 make install
 make test                     # 11 offline tests, no network, no keys
 make all                      # capture -> cards -> judge -> aggregate
-make report                   # HTML + PDF
+make report                   # HTML + PDF      (needs Chrome or Chromium)
+make slide                    # the one-slide summary PNG (same requirement)
 ```
 
 `make capture` works with **no Keenable key at all** — the challenger has a documented
@@ -110,8 +120,9 @@ Then set `INCUMBENT = "brave"` in `src/bench/cli.py`. Nothing else changes.
 | Stage | Calls | Notes |
 |---|---|---|
 | Capture | 60 | 30 queries × 2 engines, 1 request each |
-| Judge | 60 | 30 pairs × 2 presentation orders |
-| **Total** | **120 requests** | |
+| Judge, all 30 pairs | 60 | 30 pairs × 2 presentation orders |
+| Judge, **as published** | 20 | 10 pairs were scored, × 2 presentation orders |
+| **Total as published** | **80 requests** | |
 
 Wall-clock: ~10 min for judging on a hosted frontier model at ~15 s/call, plus rate-limit
 delays on capture. Server-side cost is your judge model's per-call price — with a
@@ -133,6 +144,10 @@ src/bench/
   aggregate.py          per-query summary, agreement, stability
   render.py             Markdown -> HTML -> PDF (Chrome/Edge, else WeasyPrint)
   cli.py                capture | cards | judge | aggregate | render | all
+assets/
+  slide.html            source of the one-slide summary
+  slide.png             render of that slide (regenerate: make slide)
+paper/                  the published report: REPORT.md + report.pdf
 data/                   raw captures, cards, verdicts  (gitignored)
 out/                    summary.json, results_table.md, report.html, report.pdf
 tests/                  offline tests — no network, no keys

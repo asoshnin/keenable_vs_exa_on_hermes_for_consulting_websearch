@@ -32,10 +32,20 @@ BROWSER_BIN ?= $(shell \
 	  [ -x "$$p" ] && echo "$$p" && break; done)
 slide:
 	@[ -n "$(BROWSER_BIN)" ] || { echo "No Chrome/Chromium found; set BROWSER_BIN=..."; exit 1; }
-	"$(BROWSER_BIN)" --headless --disable-gpu --hide-scrollbars \
+	"$(BROWSER_BIN)" --headless --disable-gpu --no-sandbox --hide-scrollbars \
 	  --force-device-scale-factor=2 --window-size=1600,900 \
 	  --screenshot=assets/slide.png "file://$(CURDIR)/assets/slide.html"
 	@echo "assets/slide.png  (3200x1800)"
+	@# GitHub serves README images through its Camo CDN, which caches by URL, so an
+	@# unchanged filename keeps showing the previous render. Stamp the content hash
+	@# into the README query string so every regeneration is a new URL.
+	@h=$$(shasum -a 256 assets/slide.png | cut -c1-8); \
+	 if grep -q 'assets/slide.png?v=' README.md; then \
+	   perl -pi -e "s{assets/slide\\.png\\?v=[0-9a-f]+}{assets/slide.png?v=$$h}g" README.md; \
+	 else \
+	   perl -pi -e "s{assets/slide\\.png\\)}{assets/slide.png?v=$$h)}g" README.md; \
+	 fi; \
+	 echo "README.md image stamped with ?v=$$h (defeats Camo caching)"
 
 test:
 	$(PY) -m pytest -q tests || $(PY) -m unittest discover -s tests -v
