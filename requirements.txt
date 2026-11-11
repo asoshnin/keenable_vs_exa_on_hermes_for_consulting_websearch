@@ -1,0 +1,11 @@
+# Runtime dependencies. All pure-Python.
+requests>=2.31,<3
+PyYAML>=6.0,<7
+markdown>=3.5,<4
+
+# Test dependency, so `make test` works straight after `make install`.
+pytest>=8,<10
+
+# Optional: PDF rendering without a browser installed.
+# Needs system pango/cairo (macOS: brew install pango; Debian: apt install libpango-1.0-0 libcairo2).
+# weasyprint>=60,<64

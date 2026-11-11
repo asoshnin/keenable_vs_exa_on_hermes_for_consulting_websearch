@@ -1,0 +1,119 @@
+# Query set for the search-backend benchmark.
+#
+# Design rules (see README):
+#  * 5-6 categories, ~5 queries each.
+#  * At least one category where the challenger is expected to LOSE — a set that
+#    cannot produce a loss is advocacy, not a benchmark.
+#  * Store the query ONCE here and reuse the byte-identical string for every
+#    engine and every judge. A re-worded variant is a different query.
+#
+# `limit` is pinned per query so every engine is asked the same thing.
+
+defaults:
+  limit: 10
+
+queries:
+  # ---- 1. Business intelligence / market sizing -------------------------------
+  - id: BI-001
+    category: business_intelligence
+    query: "Total Addressable Market B2B SaaS DACH region 2024 2025 forecast"
+    expected_loss: false
+  - id: BI-002
+    category: business_intelligence
+    query: "Competitive landscape European neobanks 2024 market share revenue N26 Revolut Bunq Monzo"
+  - id: BI-003
+    category: business_intelligence
+    query: "Enterprise software spending growth trends 2024 Gartner IDC worldwide IT spending forecast"
+  - id: BI-004
+    category: business_intelligence
+    query: "Supply chain management software market size 2024 key vendors SAP Oracle Blue Yonder Manhattan Associates"
+  - id: BI-005
+    category: business_intelligence
+    query: "Generative AI enterprise adoption rates 2024 survey McKinsey BCG Bain Deloitte PwC"
+
+  # ---- 2. Strategy & M&A ------------------------------------------------------
+  - id: STRAT-001
+    category: strategy_ma
+    query: "Technology M&A valuation multiples cybersecurity 2023 2024 EV/Revenue EV/EBITDA"
+  - id: STRAT-002
+    category: strategy_ma
+    query: "Microsoft Activision Blizzard deal structure regulatory approval timeline FTC CMA EU Commission"
+  - id: STRAT-003
+    category: strategy_ma
+    query: "Private equity portfolio value creation levers 2024 operational improvement add-on acquisitions"
+  - id: STRAT-004
+    category: strategy_ma
+    query: "Carve-out separation costs benchmarks IT systems TSAs duration 2023 2024"
+  - id: STRAT-005
+    category: strategy_ma
+    query: "Roll-up strategy success factors fragmentation HVAC dental veterinary 2024 case studies"
+
+  # ---- 3. Finance & markets ---------------------------------------------------
+  - id: FIN-001
+    category: finance_markets
+    query: "SaaS valuation benchmarks Series B ARR multiple 2024 public comps private transactions"
+  - id: FIN-002
+    category: finance_markets
+    query: "Private credit direct lending returns vs broadly syndicated loans 2023 2024 IRR MOIC"
+  - id: FIN-003
+    category: finance_markets
+    query: "Venture capital fund performance quartiles vintage 2020 2021 2022 TVPI DPI RVPI"
+  - id: FIN-004
+    category: finance_markets
+    query: "Infrastructure fund returns renewable energy digital infrastructure 2023 2024 benchmarks"
+  - id: FIN-005
+    category: finance_markets
+    query: "SPAC performance post-merger 2021 2022 2023 redemption rates shareholder returns"
+
+  # ---- 4. IT & technical due diligence ---------------------------------------
+  - id: IT-001
+    category: it_technical
+    query: "Kubernetes adoption enterprise 2024 Gartner CNCF survey production clusters percentage"
+  - id: IT-002
+    category: it_technical
+    query: "Vector database comparison Pinecone Weaviate Chroma Milvus Qdrant performance benchmarks 2024"
+  - id: IT-003
+    category: it_technical
+    query: "LLM inference cost optimization GPU utilization vLLM TensorRT-LLM TGI 2024 benchmarks"
+  - id: IT-004
+    category: it_technical
+    query: "Data mesh architecture implementation patterns Data Contracts governance 2024 case studies"
+  - id: IT-005
+    category: it_technical
+    query: "Observability platform market share Datadog New Relic Dynatrace Grafana Splunk 2024 revenue"
+
+  # ---- 5. Regulatory & compliance --------------------------------------------
+  - id: REG-001
+    category: regulatory
+    query: "EU AI Act implementation timeline financial services high-risk AI systems 2024 2025"
+  - id: REG-002
+    category: regulatory
+    query: "CSRD ESRS reporting requirements non-EU companies scope 2024 2025 double materiality"
+  - id: REG-003
+    category: regulatory
+    query: "SOX 404 compliance cost benchmarks mid-market companies 2024 external auditor fees internal resources"
+  - id: REG-004
+    category: regulatory
+    query: "DORA Digital Operational Resilience Act financial entities ICT risk management requirements 2025"
+  - id: REG-005
+    category: regulatory
+    query: "GDPR Article 28 DPA requirements international data transfers SCCs 2024 Schrems III implications"
+
+  # ---- 6. Deep / multi-hop research ------------------------------------------
+  # This is the category where the challenger is expected to be beatable.
+  - id: DEEP-001
+    category: deep_research
+    query: "Impact of CSRD on non-EU companies supply chain reporting Scope 3 emissions data availability challenges 2024"
+    expected_loss: true
+  - id: DEEP-002
+    category: deep_research
+    query: "Generative AI ROI enterprise deployments 2023 2024 measurable productivity gains cost savings case studies"
+  - id: DEEP-003
+    category: deep_research
+    query: "Climate transition risk banking portfolio alignment Paris Agreement NZBA PCAF methodology 2024"
+  - id: DEEP-004
+    category: deep_research
+    query: "Quantum computing threat timeline RSA ECC cryptography migration post-quantum NIST standards 2024 enterprise readiness"
+  - id: DEEP-005
+    category: deep_research
+    query: "Green hydrogen cost parity forecasts 2030 2040 electrolyzer CAPEX renewable LCOE regional analysis Europe Middle East Australia"

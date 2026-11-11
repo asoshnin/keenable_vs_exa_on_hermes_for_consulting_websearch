@@ -1,0 +1,81 @@
+# Scoring rubric: six dimensions, ordinal 0..2 anchors, fixed weights.
+#
+# The anchors are the substance of the rubric — they are what makes two very
+# different judges (a heuristic System-1 model and a frontier LLM) score the same
+# evidence comparably. Change them only with a rubric-hash bump in mind.
+#
+# IMPORTANT (statistical): the 0..2 anchors are ORDINAL. The weighted composite is
+# a convenience summary for ranking, not a measurement on an interval scale.
+# Report it as a rank and a percentage of the available range, never as a
+# physically meaningful quantity, and never compute ratios of composites.
+
+scale:
+  min: 0
+  max: 2
+
+dimensions:
+  - key: relevance_precision
+    weight: 2.5
+    critical: true
+    question: >
+      Rate the share of returned top-10 results that directly answer the stated query
+      with on-topic substance rather than tangential, generic or navigational pages.
+    anchors:
+      - "0-3 of 10 results directly answer; majority tangential, navigational or off-domain"
+      - "4-6 of 10 results directly answer; noticeable noise or filler"
+      - "7-10 of 10 results directly answer with on-topic substance"
+
+  - key: source_authority
+    weight: 2.0
+    question: >
+      Rate the authority tier of the cited sources. Tier 1 is primary/authoritative:
+      regulators, official statistics, Big 4 and strategy firms, named M&A advisor
+      reports, peer-reviewed papers. Tier 2 is reputable trade press and specialist
+      analysts. Tier 3 is SEO content, unattributed aggregators and vendor marketing.
+    anchors:
+      - "Predominantly tier-3: SEO content, unattributed aggregators, vendor marketing"
+      - "Mixed tier-2 and tier-3: trade press and blogs outweigh primary sources"
+      - "Predominantly tier-1: regulators, Big 4/strategy firms, named advisors, peer-reviewed work"
+
+  - key: analytical_depth
+    weight: 2.0
+    question: >
+      Rate whether the evidence supports real analytical work: disaggregated cohorts,
+      segment-level breakdowns, competing viewpoints, stated methodology and caveats -
+      rather than a single headline number or a generic overview.
+    anchors:
+      - "Single headline figure or generic overview; no segmentation, no competing views"
+      - "Some segmentation or a few data points, but gaps in methodology or viewpoint coverage"
+      - "Rich disaggregation, competing viewpoints and stated methodology"
+
+  - key: recency_freshness
+    weight: 1.5
+    question: >
+      Rate the currency of the substantive data points relative to the query's
+      reference window, not merely the page's stated publish date.
+    anchors:
+      - "Core data points are more than 18 months stale for a time-sensitive query"
+      - "Core data points are roughly 6-18 months old"
+      - "Core data points are within the last 6 months, or the query is historically scoped"
+
+  - key: structured_extractability
+    weight: 1.0
+    question: >
+      Rate how much of the answer can be lifted into a consulting deliverable without
+      re-deriving it: explicit tables, labelled multiples, penalties, dates and
+      attributable figures present in the returned material.
+    anchors:
+      - "Narrative prose only; no figures, tables or attributable numbers"
+      - "Some figures or dates, but requires manual reconstruction into a usable table"
+      - "Explicit tables, labelled multiples and attributable figures ready to lift"
+
+  - key: query_understanding
+    weight: 1.0
+    question: >
+      Rate how faithfully the result set reflects the full intent of a multi-part,
+      jargon-dense professional query, including implied constraints such as sector,
+      jurisdiction or comparison dimension.
+    anchors:
+      - "Literal keyword match only; wrong domain, jurisdiction or comparison dimension"
+      - "Main intent captured; one or more implied constraints dropped"
+      - "Full intent captured including implied sector, jurisdiction and comparison dimensions"
