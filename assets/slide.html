@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Keenable vs Exa — benchmark summary</title>
+<style>
+  /* ---------------------------------------------------------------------
+     One-slide summary of the benchmark. 1600x900 canvas, rendered at 2x.
+     Register is analyst research note: warm paper, ink, one teal, one amber.
+     Deliberately no card chrome - the verdict column is a borderless
+     editorial stack, so it reads as a finding rather than a dashboard
+     widget, and its first line aligns with the chart's first bar.
+     --------------------------------------------------------------------- */
+  :root{
+    --paper:#FAF8F4;
+    --ink:#16181D;
+    --muted:#6E727C;
+    --faint:#9BA0AA;
+    --rule:#DED9D0;
+    --keen:#0E6E68;
+    --keen-soft:#DCEAE8;
+    --exa:#A8B0BB;
+    --flag:#B45309;
+    --flag-soft:#F6E7D6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:var(--paper);}
+  body{
+    width:1600px;height:900px;overflow:hidden;position:relative;
+    font-family:-apple-system,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+    color:var(--ink);-webkit-font-smoothing:antialiased;
+  }
+  .slide{position:absolute;inset:0;padding:52px 68px 40px;display:flex;flex-direction:column;}
+
+  /* --- masthead ------------------------------------------------------- */
+  .eyebrow{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;
+  }
+  .eyebrow .right{letter-spacing:.08em;text-transform:none;font-weight:500;color:var(--faint);}
+  .hr{height:1px;background:var(--rule);margin:14px 0 0;}
+
+  /* --- thesis -------------------------------------------------------- */
+  h1{
+    font-family:"Iowan Old Style","Charter",Georgia,"Times New Roman",serif;
+    font-size:63px;line-height:1.04;letter-spacing:-.018em;font-weight:600;
+    margin-top:25px;max-width:1180px;
+  }
+  h1 .not{color:var(--flag);}
+  .sub{
+    margin-top:15px;font-size:19.5px;line-height:1.42;color:var(--muted);
+    max-width:1090px;text-wrap:balance;
+  }
+  .sub b{color:var(--ink);font-weight:600;}
+
+  /* --- body grid ----------------------------------------------------- */
+  .body{display:grid;grid-template-columns:1fr 496px;gap:48px;margin-top:30px;flex:1;min-height:0;}
+  .label{
+    font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--faint);font-weight:700;margin-bottom:16px;height:14px;white-space:nowrap;
+  }
+
+  /* --- dimension bars ------------------------------------------------ */
+  .bar{margin-bottom:12.5px;}
+  .bar .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+  .bar .name{font-size:15px;font-weight:500;color:var(--muted);}
+  .bar .val{font-size:15px;font-weight:650;font-variant-numeric:tabular-nums;color:var(--faint);}
+  .track{height:9px;background:#ECE8E1;border-radius:1px;overflow:hidden;}
+  .fill{height:100%;background:var(--exa);border-radius:1px;}
+  .bar.keen .name{color:var(--ink);font-weight:600;}
+  .bar.keen .val{color:var(--keen);font-weight:700;}
+  .bar.keen .fill{background:var(--keen);}
+  .bar.flag .name{color:var(--ink);font-weight:600;}
+  .bar.flag .val{color:var(--flag);font-weight:700;}
+  .bar.flag .fill{background:var(--flag);opacity:.82;}
+  .note{margin-top:10px;font-size:13.5px;line-height:1.42;color:var(--faint);max-width:640px;text-wrap:balance;}
+
+  /* --- verdict column: borderless editorial stack -------------------- */
+  .col{display:flex;flex-direction:column;min-height:0;}
+  .verdict{padding-bottom:15px;}
+  .vh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+  .vname{font-size:16px;font-weight:650;letter-spacing:-.005em;}
+  .chip{
+    font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;
+    padding:3.5px 8px 3px;border-radius:2px;white-space:nowrap;
+  }
+  .chip.win{background:var(--keen-soft);color:#0A544F;}
+  .chip.mix{background:var(--flag-soft);color:#8A3F06;}
+  .metric{display:flex;align-items:baseline;gap:10px;margin-top:9px;}
+  .metric .n{
+    font-size:36px;font-weight:650;letter-spacing:-.032em;
+    font-variant-numeric:tabular-nums;line-height:1;
+  }
+  .metric .n.k{color:var(--keen);}
+  .metric .u{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.3;}
+  .fine{margin-top:9px;font-size:13.5px;line-height:1.46;color:var(--muted);text-wrap:balance;}
+  .fine b{color:var(--ink);font-weight:600;}
+  .sep{height:1px;background:var(--rule);margin:0 0 15px;}
+
+  .method{margin-top:auto;padding-top:14px;border-top:1px solid var(--rule);}
+  .method .mh{
+    font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--faint);font-weight:700;margin-bottom:9px;
+  }
+  .method .mr{display:flex;gap:11px;align-items:baseline;margin-bottom:7px;font-size:12.5px;line-height:1.38;text-wrap:pretty;}
+  .method .mk{
+    font-weight:700;color:var(--keen);font-variant-numeric:tabular-nums;
+    min-width:50px;text-align:right;flex:none;font-size:13px;
+  }
+  .method .mt{color:var(--muted);}
+
+  /* --- footer -------------------------------------------------------- */
+  .foot{
+    margin-top:24px;padding-top:13px;border-top:1px solid var(--rule);
+    display:flex;justify-content:space-between;align-items:baseline;gap:34px;
+    font-size:12.5px;color:var(--faint);
+  }
+  .foot .l{font-weight:500;}
+  .foot .r{white-space:nowrap;}
+  .foot code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <div class="eyebrow">
+    <div>Search backend benchmark &middot; consulting deep research</div>
+    <div class="right">November 2026</div>
+  </div>
+  <div class="hr"></div>
+
+  <h1>Keenable wins on depth &mdash; <span class="not">not on freshness.</span></h1>
+  <p class="sub">
+    Blind scoring of <b>30 consulting research queries</b> &mdash; market sizing, M&amp;A, regulation,
+    technical and financial due diligence. The edge is <b>depth and detail</b>, not source currency.
+  </p>
+
+  <div class="body">
+
+    <div>
+      <div class="label">Score gap by criterion &mdash; Keenable minus Exa</div>
+
+      <div class="bar keen">
+        <div class="top"><span class="name">Analytical depth</span><span class="val">+0.31</span></div>
+        <div class="track"><div class="fill" style="width:88%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="top"><span class="name">Source authority</span><span class="val">+0.23</span></div>
+        <div class="track"><div class="fill" style="width:66%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="top"><span class="name">Query understanding</span><span class="val">+0.17</span></div>
+        <div class="track"><div class="fill" style="width:48%"></div></div>
+      </div>
+      <div class="bar">
+        <div class="top"><span class="name">Structured extractability</span><span class="val">+0.12</span></div>
+        <div class="track"><div class="fill" style="width:35%"></div></div>
+      </div>
+      <div class="bar flag">
+        <div class="top"><span class="name">Recency &amp; freshness</span><span class="val">+0.04</span></div>
+        <div class="track"><div class="fill" style="width:12%"></div></div>
+      </div>
+      <div class="bar flag">
+        <div class="top"><span class="name">Relevance precision</span><span class="val">+0.04</span></div>
+        <div class="track"><div class="fill" style="width:11%"></div></div>
+      </div>
+
+      <div class="note">
+        Ordinal 0&ndash;2 scale, weight-normalised, 20 blind evaluations. The criterion everyone
+        expects to matter &mdash; freshness &mdash; comes last but one.
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="label">Verdict by research type</div>
+
+      <div class="verdict">
+        <div class="vh">
+          <span class="vname">Consulting research</span>
+          <span class="chip win">Consistent lead</span>
+        </div>
+        <div class="metric">
+          <span class="n k">+0.195</span>
+          <span class="u">of 2.00<br>9.7% of scale</span>
+        </div>
+        <div class="fine">
+          Clear wins on <b>3 of 5</b> pairs under the decision plane, <b>5 of 5</b> under the frontier
+          judge. Direction consistent; the margin sits inside its confidence interval, so read the
+          size as indicative.
+        </div>
+      </div>
+      <div class="sep"></div>
+
+      <div class="verdict">
+        <div class="vh">
+          <span class="vname">Deep research</span>
+          <span class="chip mix">Contested</span>
+        </div>
+        <div class="metric">
+          <span class="n">+0.110</span>
+          <span class="u">of 2.00<br>5.5% of scale</span>
+        </div>
+        <div class="fine">
+          One clear win, one directional loss, three gaps below the pre-declared floor &mdash;
+          <b>not a differentiator for this use case.</b>
+        </div>
+      </div>
+
+      <div class="method">
+        <div class="mh">Method</div>
+        <div class="mr"><span class="mk">10/10</span><span class="mt">pairs kept the same winner when the candidate order was swapped</span></div>
+        <div class="mr"><span class="mk">2</span><span class="mt">independent judges &mdash; an MCDA decision plane and a frontier LLM</span></div>
+        <div class="mr"><span class="mk">0.10</span><span class="mt">pre-declared clear-win floor on the 0&ndash;2 scale, so near-ties stay ties</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <div class="l">30 queries &middot; 6 categories &middot; 10 scored pairs &middot; both orders &middot; 95% CIs</div>
+    <div class="r">Harness &amp; full report: <code>github.com/asoshnin</code></div>
+  </div>
+
+</div>
+</body>
+</html>

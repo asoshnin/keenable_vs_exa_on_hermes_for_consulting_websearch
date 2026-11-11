@@ -12,6 +12,23 @@ The harness produced the accompanying report — `paper/REPORT.md` and `paper/re
 comparing **Keenable** against **Exa** on 30 captured queries across six categories, of which
 10 pairs were scored by two independent judges in both presentation orders.
 
+[![Benchmark summary: Keenable wins on depth, not on freshness](assets/slide.png)](paper/report.pdf)
+
+*One-slide summary. Click for the full report (`paper/report.pdf`). Re-render it with `make slide`.*
+
+---
+
+## The finding, in one paragraph
+
+Keenable wins, but not for the reason usually claimed. Across ten blind-scored pairs its
+advantage concentrates in **analytical depth** (+0.31 on a 0–2 scale, the largest of six
+criteria) and **source authority** (+0.23). On **recency and freshness** — the criterion one
+would expect a challenger to compete on — the gap is +0.04, fifth of six and inside the noise.
+The lead is consistent on consulting-style research (clear wins on 3 of 5 pairs under a decision
+plane, 5 of 5 under a frontier judge) and **contested on deep research** (one clear win, one
+directional loss, three gaps below the pre-declared 0.10 clear-win floor). Read the margin as
+indicative, not established: the consulting confidence interval spans zero.
+
 ---
 
 ## Why the method is built this way
